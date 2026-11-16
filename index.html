@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TECSEGNORTE |  Segurança do Trabalho, Higiene Ocupacional e Tecnologia SST</title>
+    <meta name="description" content="TECSEGNORTE - Especialista em Engenharia de Segurança do Trabalho, NRs, NHOs, INs CBMSC, PGR/GRO, Avaliações Quantitativas e Aplicativos para SST em Santa Catarina.">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            950: '#090f1d',
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                        },
+                        safety: {
+                            500: '#f59e0b',
+                            600: '#ea580c',
+                        },
+                        emerald: {
+                            500: '#10b981',
+                            600: '#059669',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-amber-500 selection:text-white overflow-x-hidden">
+
+    <!-- Notificação Toast Flutuante (Feedback de cópia / envio) -->
+    <div id="toast-notification" class="fixed top-24 right-4 z-50 transform translate-x-full opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-navy-900 text-white px-5 py-3.5 rounded-xl shadow-2xl border border-slate-700 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <div>
+                <p id="toast-title" class="text-sm font-semibold">Sucesso!</p>
+                <p id="toast-message" class="text-xs text-slate-300">Número copiado para a área de transferência.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. NAVBAR FIXA -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-navy-900/95 backdrop-blur-md border-b border-slate-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logotipo Estilizado -->
+                <a href="#inicio" class="flex items-center gap-3 group focus:outline-none">
+                    <div class="relative w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-shield-halved text-white text-xl"></i>
+                        <i class="fa-solid fa-gear text-navy-900 text-[11px] absolute bottom-1.5 right-1.5 bg-white rounded-full p-0.5"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-display font-extrabold text-xl tracking-wider text-white leading-none">
+                            TECSEG<span class="text-amber-500">NORTE</span>
+                        </span>
+                        <span class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mt-1">
+                             Auditoria. Solução e Segurança do rabalho.
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Links Desktop -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="#inicio" class="text-sm font-medium text-slate-300 hover:text-amber-400 transition-colors">Início</a>
+                    <a href="#servicos" class="text-sm font-medium text-slate-300 hover:text-amber-400 transition-colors">Serviços</a>
+                    <a href="#diferenciais" class="text-sm font-medium text-slate-300 hover:text-amber-400 transition-colors">Diferenciais</a>
+                    <a href="#contato" class="text-sm font-medium text-slate-300 hover:text-amber-400 transition-colors">Contato</a>
+                </nav>
+
+                <!-- Botão CTA Desktop & Menu Mobile -->
+                <div class="flex items-center gap-3">
+                    <a href="https://wa.me/5548999696483?text=Ol%C3%A1%20Marcelo%2C%20vim%20pelo%20site%20da%20TECSEGNORTE%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="hidden sm:inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:-translate-y-0.5">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>WhatsApp</span>
+                    </a>
+
+                    <!-- Botão Menu Mobile -->
+                    <button id="mobile-menu-btn" type="button" aria-label="Abrir Menu" class="md:hidden p-3 rounded-xl text-slate-300 hover:text-white hover:bg-navy-800 transition-colors">
+                        <i class="fa-solid fa-bars text-xl" id="mobile-menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-navy-800 border-t border-slate-700 px-4 pt-3 pb-6 space-y-2 shadow-2xl">
+            <a href="#inicio" class="mobile-nav-link block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:bg-navy-700 hover:text-amber-400">Início</a>
+            <a href="#servicos" class="mobile-nav-link block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:bg-navy-700 hover:text-amber-400">Serviços</a>
+            <a href="#diferenciais" class="mobile-nav-link block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:bg-navy-700 hover:text-amber-400">Diferenciais</a>
+            <a href="#contato" class="mobile-nav-link block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:bg-navy-700 hover:text-amber-400">Contato</a>
+            <div class="pt-2">
+                <a href="https://wa.me/5548999696483?text=Ol%C3%A1%20Marcelo%2C%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%20com%20a%20TECSEGNORTE." 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3.5 rounded-xl shadow-md">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    <span>Falar com Marcelo Picanço</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. HERO SECTION -->
+    <section id="inicio" class="relative pt-28 pb-20 lg:pt-36 lg:pb-28 bg-navy-900 text-white overflow-hidden">
+        <!-- Grade Técnica Decorativa de Fundo -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#f59e0b 1px, transparent 1px); background-size: 28px 28px;"></div>
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-amber-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Coluna de Texto Principal -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-navy-800 border border-slate-700 text-amber-400 text-xs sm:text-sm font-semibold tracking-wide">
+                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                        <span>Atendimento Técnico Especializado em Florianópolis</span>
+                    </div>
+
+                    <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-white">
+                        Conformidade Legal, Prevenção de Riscos e <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">Tecnologia em Segurança do Trabalho</span>
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl">
+                        A <strong class="text-white">TECSEGNORTE</strong> oferece soluções completas em Segurança, Higiene Ocupacional (NRs, NHOs e INs CBMSC), treinamentos corporativos, perícias e desenvolvimento de aplicativos sob medida para gestão de SST.
+                    </p>
+
+                    <!-- Botões de Ação -->
+                    <div class="flex flex-col sm:flex-row gap-4 pt-2">
+                        <a href="https://wa.me/5548999696483?text=Ol%C3%A1%20Marcelo%2C%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%20para%20servi%C3%A7os%20de%20SST%20da%20TECSEGNORTE." 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center justify-center gap-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-7 py-4 rounded-xl shadow-xl shadow-emerald-500/25 transition-all hover:-translate-y-0.5 text-base">
+                            <i class="fa-brands fa-whatsapp text-2xl"></i>
+                            <span>Solicitar Orçamento no WhatsApp</span>
+                        </a>
+
+                        <a href="#servicos" 
+                           class="inline-flex items-center justify-center gap-2 bg-navy-800 hover:bg-navy-700 text-white font-semibold px-7 py-4 rounded-xl border border-slate-700 transition-all text-base">
+                            <span>Conhecer Serviços</span>
+                            <i class="fa-solid fa-arrow-down text-amber-400"></i>
+                        </a>
+                    </div>
+
+                    <!-- Selos Rápidos de Autoridade -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-800">
+                        <div>
+                            <p class="font-display font-bold text-xl sm:text-2xl text-amber-400">NRs &amp; NHOs</p>
+                            <p class="text-xs sm:text-sm text-slate-400">Rigor Técnico e Legal</p>
+                        </div>
+                        <div>
+                            <p class="font-display font-bold text-xl sm:text-2xl text-emerald-400">CBMSC</p>
+                            <p class="text-xs sm:text-sm text-slate-400">Instruções Normativas SC</p>
+                        </div>
+                        <div>
+                            <p class="font-display font-bold text-xl sm:text-2xl text-white">Apps SST</p>
+                            <p class="text-xs sm:text-sm text-slate-400">Inovação &amp; Controle Digital</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Técnico Destaque (Lado Direito) -->
+                <div class="lg:col-span-5">
+                    <div class="bg-navy-800/90 backdrop-blur-sm border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+                        <div class="flex items-center justify-between border-b border-slate-700 pb-5 mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                                    <i class="fa-solid fa-helmet-safety text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h2 class="font-display font-bold text-lg text-white">Gestão Integrada SST</h2>
+                                    <p class="text-xs text-slate-400">Engenharia + Higiene + Tecnologia</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 text-xs font-bold border border-emerald-500/30">
+                                100% Técnico
+                            </span>
+                        </div>
+
+                        <ul class="space-y-4 text-sm text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-emerald-400 mt-1"></i>
+                                <span><strong class="text-white">Treinamentos Normativos:</strong> NRs, NHOs, INs CBMSC, Brigadistas e Operadores de Máquinas.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-emerald-400 mt-1"></i>
+                                <span><strong class="text-white">Programas:</strong> Elaboração de PGR/GRO e Avaliações Quantitativas (Ruído, Calor e Iluminação).</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-emerald-400 mt-1"></i>
+                                <span><strong class="text-white">Consultoria &amp; Perícias:</strong> Auditorias documentais, inspeções, visitas técnicas e assistência pericial.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-amber-400 mt-1"></i>
+                                <span><strong class="text-amber-400">Tecnologia Exclusiva:</strong> Desenvolvimento de aplicativos personalizados para gestão de SST.</span>
+                            </li>
+                        </ul>
+
+                        <div class="mt-6 pt-5 border-t border-slate-700 flex items-center justify-between">
+                            <div>
+                                <p class="text-xs text-slate-400">Atendimento Direto</p>
+                                <p class="font-display font-bold text-white">Marcelo Picanço</p>
+                            </div>
+                            <a href="tel:+5548999696483" class="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 font-semibold text-sm">
+                                <i class="fa-solid fa-phone"></i>
+                                <span>(48) 9 9969-6483</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SEÇÃO DE SERVIÇOS (COM FILTROS POR CATEGORIA) -->
+    <section id="servicos" class="py-20 lg:py-28 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Cabeçalho da Seção -->
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-12">
+                <span class="inline-block px-3.5 py-1.5 rounded-full bg-amber-500/10 text-orange-600 font-bold text-xs uppercase tracking-wider">
+                    Portfólio Completo
+                </span>
+                <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-navy-900">
+                    Nossos Serviços Especializados em SST
+                </h2>
+                <p class="text-slate-600 text-base sm:text-lg">
+                    Selecione uma categoria abaixo ou clique diretamente em qualquer serviço para solicitar uma proposta técnica via WhatsApp.
+                </p>
+            </div>
+
+            <!-- Botões de Filtro por Categoria -->
+            <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-12" role="tablist" aria-label="Filtrar serviços por categoria">
+                <button type="button" data-filter="todos" class="filter-btn active px-5 py-3 rounded-xl text-sm font-semibold transition-all bg-navy-900 text-white shadow-md">
+                    Todos os Serviços (12)
+                </button>
+                <button type="button" data-filter="treinamentos" class="filter-btn px-5 py-3 rounded-xl text-sm font-semibold transition-all bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+                    <i class="fa-solid fa-graduation-cap mr-1.5 text-amber-500"></i>Treinamentos
+                </button>
+                <button type="button" data-filter="engenharia" class="filter-btn px-5 py-3 rounded-xl text-sm font-semibold transition-all bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+                    <i class="fa-solid fa-compass-drafting mr-1.5 text-orange-600"></i>Técnico &amp; Programas
+                </button>
+                <button type="button" data-filter="consultoria" class="filter-btn px-5 py-3 rounded-xl text-sm font-semibold transition-all bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+                    <i class="fa-solid fa-laptop-code mr-1.5 text-emerald-500"></i>Consultoria &amp; Tecnologia
+                </button>
+            </div>
+
+            <!-- Grid de Cards de Serviços (Renderizado via JS para facilitar manutenção e filtragem limpa) -->
+            <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <!-- Os 12 cards serão injetados aqui pelo script mantendo SEO e acessibilidade -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SEÇÃO SOBRE / DIFERENCIAIS -->
+    <section id="diferenciais" class="py-20 lg:py-28 bg-white border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Coluna Esquerda: Narrativa Institucional -->
+                <div class="lg:col-span-6 space-y-6">
+                    <span class="inline-block px-3.5 py-1.5 rounded-full bg-navy-900/5 text-navy-900 font-bold text-xs uppercase tracking-wider">
+                        Diferenciais TECSEGNORTE
+                    </span>
+                    <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-navy-900 leading-tight">
+                        Rigor Normativo Aliado à Inovação Tecnológica em SST
+                    </h2>
+                    <p class="text-slate-600 text-base leading-relaxed">
+                        Sob a liderança técnica de <strong class="text-navy-900">Marcelo Picanço</strong>, a <strong class="text-navy-900">TECSEGNORTE</strong> atua com foco absoluto na segurança jurídica, operacional e preventiva das empresas em Santa Catarina.
+                    </p>
+                    <p class="text-slate-600 text-base leading-relaxed">
+                        Além do domínio prático das <strong>Normas Regulamentadoras (NRs)</strong>, das <strong>Normas de Higiene Ocupacional (NHOs da Fundacentro)</strong> e das <strong>Instruções Normativas do Corpo de Bombeiros Militar de Santa Catarina (CBMSC)</strong>, entregamos um diferencial exclusivo no mercado: o <strong>desenvolvimento de aplicativos próprios para SST</strong>, transformando controles manuais em gestão inteligente e rastreável.
+                    </p>
+
+                    <div class="pt-2">
+                        <a href="https://wa.me/5548999696483?text=Ol%C3%A1%20Marcelo%2C%20gostaria%20de%20conversar%20sobre%20as%20solu%C3%A7%C3%B5es%20da%20TECSEGNORTE%20para%20minha%20empresa." 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center gap-2.5 bg-navy-900 hover:bg-navy-800 text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg transition-all">
+                            <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i>
+                            <span>Agendar Reunião Técnica</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Coluna Direita: 4 Pilares em Cards -->
+                <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:border-amber-500/50 transition-colors">
+                        <div class="w-12 h-12 rounded-xl bg-navy-900 text-amber-400 flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-navy-900 mb-2">Conformidade Normativa</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Atendimento rigoroso às exigências do MTE (NRs), Fundacentro (NHOs) e CBMSC (INs), blindando sua empresa contra passivos.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:border-amber-500/50 transition-colors">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-wave-square"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-navy-900 mb-2">Precisão Quantitativa</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Instrumentação calibrada e metodologia técnica avançada para medições de Ruído, Calor e Iluminação com laudos confiáveis.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-navy-900 mb-2">Apps Sob Medida para SST</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Criação de aplicativos para checklists de campo, inspeções, controle de EPIs, treinamentos e indicadores em tempo real.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:border-amber-500/50 transition-colors">
+                        <div class="w-12 h-12 rounded-xl bg-navy-800 text-emerald-400 flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-navy-900 mb-2">Atendimento Personalizado</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Acompanhamento direto com Marcelo Picanço, adaptando integrações, treinamentos e perícias à realidade da sua operação.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SEÇÃO DE CONTATO E CTA FINAL -->
+    <section id="contato" class="py-20 lg:py-28 bg-navy-900 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+                
+                <!-- Card de Contato Direto -->
+                <div class="lg:col-span-5 bg-navy-800 border border-slate-700 rounded-2xl p-8 flex flex-col justify-between shadow-2xl">
+                    <div class="space-y-6">
+                        <span class="inline-block px-3.5 py-1.5 rounded-full bg-amber-500/15 text-amber-400 font-bold text-xs uppercase tracking-wider">
+                            Canais de Atendimento
+                        </span>
+                        <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-white">
+                            Fale Diretamente com a TECSEGNORTE
+                        </h2>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Solicite propostas para treinamentos in-company, laudos ambientais, adequação ao CBMSC, perícias ou desenvolvimento de aplicativos para SST.
+                        </p>
+
+                        <!-- Bloco Responsável -->
+                        <div class="p-5 rounded-xl bg-navy-900/80 border border-slate-700 space-y-4">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-display font-bold text-lg">
+                                    MP
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Consultor &amp; Responsável</p>
+                                    <p class="font-display font-bold text-lg text-white">Marcelo Picanço</p>
+                                </div>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-800 space-y-3">
+                                <div class="flex items-center justify-between gap-2 bg-navy-800 p-3 rounded-xl border border-slate-700">
+                                    <div class="flex items-center gap-2.5">
+                                        <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i>
+                                        <span class="font-bold text-white text-base" id="phone-display">(48) 9 9969-6483</span>
+                                    </div>
+                                    <button type="button" onclick="copyPhoneNumber()" class="px-3 py-1.5 rounded-lg bg-navy-700 hover:bg-navy-600 text-xs font-semibold text-amber-400 transition-colors flex items-center gap-1.5" title="Copiar número">
+                                        <i class="fa-regular fa-copy"></i>
+                                        <span>Copiar</span>
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                    <a href="https://wa.me/5548999696483?text=Ol%C3%A1%20Marcelo%2C%20gostaria%20de%20um%20atendimento%20da%20TECSEGNORTE." 
+                                       target="_blank" 
+                                       rel="noopener noreferrer"
+                                       class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-4 rounded-xl text-sm transition-colors">
+                                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                                        <span>Abrir WhatsApp</span>
+                                    </a>
+                                    <a href="tel:+5548999696483" 
+                                       class="flex items-center justify-center gap-2 bg-navy-700 hover:bg-navy-600 text-white font-semibold py-3 px-4 rounded-xl text-sm border border-slate-600 transition-colors">
+                                        <i class="fa-solid fa-phone-volume text-amber-400"></i>
+                                        <span>Ligar Agora</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 mt-6 border-t border-slate-700 flex items-center gap-3 text-xs text-slate-400">
+                        <i class="fa-solid fa-location-dot text-amber-500 text-base"></i>
+                        <span>Atendimento presencial e consultoria técnica em Santa Catarina.</span>
+                    </div>
+                </div>
+
+                <!-- Formulário Rápido que Gera Mensagem no WhatsApp -->
+                <div class="lg:col-span-7 bg-white text-slate-800 rounded-2xl p-8 shadow-2xl">
+                    <div class="mb-6">
+                        <h3 class="font-display text-2xl font-extrabold text-navy-900">
+                            Solicitação Rápida via WhatsApp
+                        </h3>
+                        <p class="text-sm text-slate-600 mt-1">
+                            Preencha os dados abaixo para montar sua solicitação personalizada e iniciar o atendimento imediatamente no WhatsApp.
+                        </p>
+                    </div>
+
+                    <form id="whatsapp-form" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="client-name" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Seu Nome *</label>
+                                <input type="text" id="client-name" required placeholder="Ex: João Silva" 
+                                       class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20">
+                            </div>
+                            <div>
+                                <label for="client-company" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Empresa / Cidade</label>
+                                <input type="text" id="client-company" placeholder="Ex: Indústria ABC - SC" 
+                                       class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="service-select" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Serviço de Interesse *</label>
+                            <select id="service-select" required 
+                                    class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20">
+                                <option value="Treinamentos de Normas Regulamentadoras (NRs)">Treinamentos de Normas Regulamentadoras (NRs)</option>
+                                <option value="Normas de Higiene Ocupacional (NHOs)">Normas de Higiene Ocupacional (NHOs)</option>
+                                <option value="Instruções Normativas do Corpo de Bombeiros Militar de SC (CBMSC)">Instruções Normativas do Corpo de Bombeiros Militar de SC (CBMSC)</option>
+                                <option value="Formação para Brigadistas">Formação para Brigadistas</option>
+                                <option value="Treinamentos para Operadores de Máquinas e Equipamentos">Treinamentos para Operadores de Máquinas e Equipamentos</option>
+                                <option value="Integração de Colaboradores conforme Política da Empresa">Integração de Colaboradores conforme Política da Empresa</option>
+                                <option value="Elaboração de PGR / GRO">Elaboração de PGR / GRO</option>
+                                <option value="Avaliações Quantitativas: Ruído, Calor e Iluminação">Avaliações Quantitativas: Ruído, Calor e Iluminação</option>
+                                <option value="Auditorias Documentais de Segurança do Trabalho">Auditorias Documentais de Segurança do Trabalho</option>
+                                <option value="Inspeções Técnicas e Visitas Técnicas">Inspeções Técnicas e Visitas Técnicas</option>
+                                <option value="Acompanhamento de Perícias">Acompanhamento de Perícias</option>
+                                <option value="Desenvolvimento de Aplicativos para SST">Desenvolvimento de Aplicativos para SST</option>
+                                <option value="Múltiplos Serviços / Consultoria Geral">Múltiplos Serviços / Consultoria Geral</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="client-message" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Detalhes da Demanda (Opcional)</label>
+                            <textarea id="client-message" rows="3" placeholder="Informe quantidade aproximada de colaboradores, equipamentos, necessidade de laudos ou escopo do aplicativo..." 
+                                      class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"></textarea>
+                        </div>
+
+                        <button type="submit" 
+                                class="w-full flex items-center justify-center gap-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-emerald-500/25 transition-all hover:-translate-y-0.5 text-base">
+                            <i class="fa-brands fa-whatsapp text-2xl"></i>
+                            <span>Enviar Solicitação pelo WhatsApp</span>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. RODAPÉ -->
+    <footer class="bg-navy-950 text-slate-400 border-t border-slate-800 pt-14 pb-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 pb-10 border-b border-slate-800">
+                <!-- Coluna 1: Marca -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                            <i class="fa-solid fa-shield-halved text-white text-lg"></i>
+                        </div>
+                        <span class="font-display font-extrabold text-xl tracking-wider text-white">
+                            TECSEG<span class="text-amber-500">NORTE</span>
+                        </span>
+                    </div>
+                    <p class="text-sm leading-relaxed">
+                         Segurança do Trabalho, Higiene Ocupacional, Capacitações Normativas e Desenvolvimento de Aplicativos para SST.
+                    </p>
+                </div>
+
+                <!-- Coluna 2: Resumo de Atuação -->
+                <div class="space-y-3">
+                    <h4 class="font-display font-bold text-white text-sm uppercase tracking-wider">Áreas de Atuação</h4>
+                    <ul class="text-sm space-y-2">
+                        <li>• Treinamentos de NRs, NHOs e INs CBMSC</li>
+                        <li>• Brigada de Incêndio, Operadores e Integração</li>
+                        <li>• PGR / GRO e Avaliações Quantitativas (Ruído, Calor, Luz)</li>
+                        <li>• Auditorias, Inspeções, Perícias e Apps para SST</li>
+                    </ul>
+                </div>
+
+                <!-- Coluna 3: Contato -->
+                <div class="space-y-3">
+                    <h4 class="font-display font-bold text-white text-sm uppercase tracking-wider">Contato Comercial</h4>
+                    <p class="text-sm text-white font-semibold">Marcelo Picanço</p>
+                    <p class="text-sm">
+                        <a href="https://wa.me/5548999696483" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:text-emerald-300 font-semibold inline-flex items-center gap-2">
+                            <i class="fa-brands fa-whatsapp"></i>
+                            <span>(48) 9 9969-6483</span>
+                        </a>
+                    </p>
+                    <p class="text-xs text-slate-500">Santa Catarina — Brasil</p>
+                </div>
+            </div>
+
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                <p>&copy; <span id="current-year">2026</span> TECSEGNORTE — Todos os direitos reservados.</p>
+                <p>Segurança do Trabalho • Higiene Ocupacional • Tecnologia SST</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 7. BOTÃO FLUTUANTE DO WHATSAPP -->
+    <a href="https://wa.me/5548999696483?text=Ol%C3%A1%20Marcelo%2C%20estou%20no%20site%20da%20TECSEGNORTE%20e%20gostaria%20de%20informações." 
+       target="_blank" 
+       rel="noopener noreferrer"
+       aria-label="Falar com TECSEGNORTE no WhatsApp"
+       class="fixed bottom-6 right-6 z-40 group flex items-center gap-3 bg-emerald-500 hover:bg-emerald-600 text-white p-4 rounded-full shadow-2xl shadow-emerald-600/40 transition-all hover:scale-105">
+        <i class="fa-brands fa-whatsapp text-3xl"></i>
+        <span class="hidden sm:inline-block max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 ease-in-out whitespace-nowrap font-semibold text-sm pr-1">
+            Fale com Marcelo Picanço
+        </span>
+    </a>
+
+    <!-- JAVASCRIPT INTERATIVO -->
+    <script>
+        // Dados completos dos 12 serviços da TECSEGNORTE
+        const servicesData = [
+            {
+                title: "Treinamentos de Normas Regulamentadoras (NRs)",
+                category: "treinamentos",
+                categoryLabel: "Treinamentos",
+                icon: "fa-helmet-safety",
+                accent: "amber",
+                description: "Capacitações teóricas e práticas alinhadas às NRs vigentes (NR 01, NR 05, NR 06, NR 10, NR 11, NR 12, NR 18, NR 20, NR 33, NR 35 e outras), com emissão de certificados válidos."
+            },
+            {
+                title: "Normas de Higiene Ocupacional (NHOs)",
+                category: "treinamentos",
+                categoryLabel: "Treinamentos",
+                icon: "fa-ear-listen",
+                accent: "amber",
+                description: "Cursos técnicos e aplicação prática das NHOs da Fundacentro (como NHO 01 - Ruído), abordando instrumentação, calibração, critérios de avaliação e emissão de relatórios."
+            },
+            {
+                title: "Instruções Normativas do CBMSC",
+                category: "treinamentos",
+                categoryLabel: "Treinamentos",
+                icon: "fa-fire-extinguisher",
+                accent: "amber",
+                description: "Adequação técnica e capacitações baseadas nas Instruções Normativas do Corpo de Bombeiros Militar de Santa Catarina para prevenção e combate a incêndios."
+            },
+            {
+                title: "Formação para Brigadistas",
+                category: "treinamentos",
+                categoryLabel: "Treinamentos",
+                icon: "fa-kit-medical",
+                accent: "amber",
+                description: "Treinamento completo de Brigada de Emergência e Incêndio, incluindo abandono de área, prevenção, combate a princípios de incêndio e primeiros socorros."
+            },
+            {
+                title: "Treinamentos para Operadores de Máquinas e Equipamentos",
+                category: "treinamentos",
+                categoryLabel: "Treinamentos",
+                icon: "fa-gears",
+                accent: "amber",
+                description: "Habilitação e reciclagem para operação segura de máquinas e equipamentos (NR 11 e NR 12), reduzindo acidentes e garantindo conformidade operacional."
+            },
+            {
+                title: "Integração de Colaboradores conforme Política da Empresa",
+                category: "treinamentos",
+                categoryLabel: "Treinamentos",
+                icon: "fa-users-gear",
+                accent: "amber",
+                description: "Programas estruturados de integração de segurança para novos colaboradores e prestadores de serviço, personalizados conforme os riscos e políticas internas da empresa."
+            },
+            {
+                title: "Elaboração de PGR / GRO",
+                category: "engenharia",
+                categoryLabel: "Engenharia & Laudos",
+                icon: "fa-file-shield",
+                accent: "orange",
+                description: "Desenvolvimento completo do Programa de Gerenciamento de Riscos (PGR) e estruturação do Gerenciamento de Riscos Ocupacionais (GRO) conforme a NR 01."
+            },
+            {
+                title: "Avaliações Quantitativas: Ruído, Calor e Iluminação",
+                category: "engenharia",
+                categoryLabel: "Engenharia & Laudos",
+                icon: "fa-gauge-high",
+                accent: "orange",
+                description: "Medições ambientais e ocupacionais com equipamentos calibrados para caracterização precisa de exposição a ruído (dosimetria/decibelimetria), sobrecarga térmica e iluminamento."
+            },
+            {
+                title: "Auditorias Documentais de Segurança do Trabalho",
+                category: "consultoria",
+                categoryLabel: "Consultoria & Tecnologia",
+                icon: "fa-clipboard-check",
+                accent: "navy",
+                description: "Análise minuciosa de programas, laudos, certificados, ASOs, fichas de EPI e registros legais para identificar não conformidades e mitigar passivos trabalhistas."
+            },
+            {
+                title: "Inspeções Técnicas e Visitas Técnicas",
+                category: "consultoria",
+                categoryLabel: "Consultoria & Tecnologia",
+                icon: "fa-magnifying-glass-chart",
+                accent: "navy",
+                description: "Vistorias presenciais nos ambientes de trabalho para mapeamento de condições inseguras, acompanhamento de planos de ação e suporte técnico contínuo."
+            },
+            {
+                title: "Acompanhamento de Perícias",
+                category: "consultoria",
+                categoryLabel: "Consultoria & Tecnologia",
+                icon: "fa-gavel",
+                accent: "navy",
+                description: "Assistência técnica especializada em perícias judiciais de insalubridade e periculosidade, elaboração de quesitos técnicos, acompanhamento em campo e pareceres."
+            },
+            {
+                title: "Desenvolvimento de Aplicativos para SST",
+                category: "consultoria",
+                categoryLabel: "Consultoria & Tecnologia",
+                icon: "fa-mobile-screen-button",
+                accent: "emerald",
+                featured: true,
+                description: "Soluções digitais sob medida para gestão de SST: checklists mobile, inspeções de campo, controle de vencimentos, relatórios automatizados e indicadores."
+            }
+        ];
+
+        const WHATSAPP_NUMBER = "5548999696483";
+
+        // Renderiza os cards de serviços conforme o filtro selecionado
+        function renderServices(filter = "todos") {
+            const grid = document.getElementById("services-grid");
+            grid.innerHTML = "";
+
+            const filtered = filter === "todos" 
+                ? servicesData 
+                : servicesData.filter(item => item.category === filter);
+
+            filtered.forEach(service => {
+                const whatsappMessage = encodeURIComponent(
+                    `Olá Marcelo! Vim pelo site da TECSEGNORTE e tenho interesse no serviço: *${service.title}*. Gostaria de mais informações.`
+                );
+                const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}`;
+
+                // Estilos dinâmicos por destaque
+                const isFeatured = service.featured === true;
+                const cardBorder = isFeatured 
+                    ? "border-emerald-500/60 ring-2 ring-emerald-500/15" 
+                    : "border-slate-200 hover:border-amber-500/50";
+                
+                let iconBg = "bg-navy-900 text-amber-400";
+                if (service.accent === "orange") iconBg = "bg-orange-600 text-white";
+                if (service.accent === "emerald") iconBg = "bg-emerald-500 text-white";
+
+                const card = document.createElement("article");
+                card.className = `bg-white rounded-2xl p-6 sm:p-7 border ${cardBorder} shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group`;
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between gap-3 mb-5">
+                            <div class="w-12 h-12 rounded-xl ${iconBg} flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
+                                <i class="fa-solid ${service.icon}"></i>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold ${isFeatured ? 'bg-emerald-500/10 text-emerald-700' : 'bg-slate-100 text-slate-600'}">
+                                ${service.categoryLabel}
+                            </span>
+                        </div>
+
+                        <h3 class="font-display font-bold text-lg text-navy-900 mb-3 group-hover:text-orange-600 transition-colors leading-snug">
+                            ${service.title}
+                        </h3>
+
+                        <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                            ${service.description}
+                        </p>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100">
+                        <a href="${whatsappUrl}" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold transition-all ${
+                               isFeatured 
+                               ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-md shadow-emerald-500/20' 
+                               : 'bg-slate-900 hover:bg-emerald-600 text-white'
+                           }">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                            <span>Solicitar Informações</span>
+                        </a>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Controle dos botões de filtro
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".filter-btn").forEach(b => {
+                    b.classList.remove("bg-navy-900", "text-white", "shadow-md");
+                    b.classList.add("bg-white", "text-slate-700", "border", "border-slate-200");
+                });
+
+                btn.classList.remove("bg-white", "text-slate-700", "border", "border-slate-200");
+                btn.classList.add("bg-navy-900", "text-white", "shadow-md");
+
+                const filterValue = btn.getAttribute("data-filter");
+                renderServices(filterValue);
+            });
+        });
+
+        // Menu Mobile Toggle
+        const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+        const mobileMenuIcon = document.getElementById("mobile-menu-icon");
+
+        mobileMenuBtn.addEventListener("click", () => {
+            const isHidden = mobileMenu.classList.contains("hidden");
+            if (isHidden) {
+                mobileMenu.classList.remove("hidden");
+                mobileMenuIcon.classList.remove("fa-bars");
+                mobileMenuIcon.classList.add("fa-xmark");
+            } else {
+                mobileMenu.classList.add("hidden");
+                mobileMenuIcon.classList.remove("fa-xmark");
+                mobileMenuIcon.classList.add("fa-bars");
+            }
+        });
+
+        // Fecha o menu mobile ao clicar em qualquer link
+        document.querySelectorAll(".mobile-nav-link").forEach(link => {
+            link.addEventListener("click", () => {
+                mobileMenu.classList.add("hidden");
+                mobileMenuIcon.classList.remove("fa-xmark");
+                mobileMenuIcon.classList.add("fa-bars");
+            });
+        });
+
+        // Função para exibir notificação Toast
+        function showToast(title, message) {
+            const toast = document.getElementById("toast-notification");
+            document.getElementById("toast-title").textContent = title;
+            document.getElementById("toast-message").textContent = message;
+
+            toast.classList.remove("translate-x-full", "opacity-0");
+            toast.classList.add("translate-x-0", "opacity-100");
+
+            setTimeout(() => {
+                toast.classList.remove("translate-x-0", "opacity-100");
+                toast.classList.add("translate-x-full", "opacity-0");
+            }, 3500);
+        }
+
+        // Copiar telefone para área de transferência usando document.execCommand('copy')
+        function copyPhoneNumber() {
+            const phoneText = "(48) 9 9969-6483";
+            const tempInput = document.createElement("textarea");
+            tempInput.value = phoneText;
+            tempInput.style.position = "fixed";
+            tempInput.style.opacity = "0";
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand("copy");
+                showToast("Número Copiado!", "Telefone (48) 9 9969-6483 pronto para colar.");
+            } catch (err) {
+                showToast("Contato TECSEGNORTE", "WhatsApp: (48) 9 9969-6483");
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        // Formulário rápido que monta e abre a mensagem no WhatsApp
+        document.getElementById("whatsapp-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById("client-name").value.trim();
+            const company = document.getElementById("client-company").value.trim();
+            const service = document.getElementById("service-select").value;
+            const details = document.getElementById("client-message").value.trim();
+
+            let message = `Olá *Marcelo Picanço*! Vim pelo site da *TECSEGNORTE*.\n\n`;
+            message += `*Nome:* ${name}\n`;
+            if (company) {
+                message += `*Empresa/Cidade:* ${company}\n`;
+            }
+            message += `*Serviço de Interesse:* ${service}\n`;
+            if (details) {
+                message += `*Detalhes:* ${details}\n`;
+            }
+
+            const encodedMessage = encodeURIComponent(message);
+            const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+            showToast("Redirecionando...", "Abrindo conversa personalizada no WhatsApp.");
+            window.open(url, "_blank", "noopener,noreferrer");
+        });
+
+        // Inicialização ao carregar a página
+        window.addEventListener("DOMContentLoaded", () => {
+            renderServices("todos");
+            document.getElementById("current-year").textContent = new Date().getFullYear();
+        });
+    </script>
+</body>
+</html>
